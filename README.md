@@ -30,7 +30,7 @@ The following **optional** features are implemented:
 
 The following **additional** features are implemented:
 
-- [ ] User could click on a Movie DetailsViewController to watch the movie's trailer
+- [x] User could click on a Movie DetailsViewController to watch the movie's trailer
 
 Please list two areas of the assignment you'd like to **discuss further with your peers** during the next class (examples include better ways to implement something, how to extend your app in certain ways, etc):
 
