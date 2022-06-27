@@ -22,7 +22,6 @@
         
     id tID = self.movie[@"id"];
     
-    NSLog(@"%@", tID);
     NSString *trailerID = [tID stringValue];
     NSString *baseURLString = @"https://api.themoviedb.org/3/movie/";
     
@@ -44,29 +43,16 @@
         }
         else {
             NSDictionary *trailerDictionary = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:nil];
-            
-            NSLog(@"%@", trailerDictionary);
-            
             NSDictionary *trailers = trailerDictionary[@"results"][0];
-            
             NSString *trailerKey = trailers[@"key"];
-            
             NSString *youtubeLink = @"https://www.youtube.com/watch?v=";
-            
             NSString *fullYoutubeLink = [youtubeLink stringByAppendingString:trailerKey];
-            
             NSURL *videoURL = [NSURL URLWithString:fullYoutubeLink];
-            
             NSURLRequest *request = [NSURLRequest requestWithURL:videoURL cachePolicy:NSURLRequestReloadIgnoringLocalCacheData timeoutInterval:10.0];
-
             [self.trailerView loadRequest:request];
-            
-            
         }
-        
     }];
     [task resume];
-    
 }
 
 - (IBAction)onGoBackTap:(UIButton *)sender {
@@ -75,14 +61,5 @@
     
 }
 
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
 
 @end

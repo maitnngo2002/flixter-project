@@ -17,9 +17,6 @@
 @property (strong, nonatomic) UIRefreshControl *refreshControl;
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *activityIndicator;
 @property (strong, nonatomic) IBOutlet UISearchBar *movieSearch;
-
-@property (strong, nonatomic) NSArray *data;
-
 @property (strong, nonatomic) NSArray *filteredData;
 
 @end
@@ -47,10 +44,9 @@
 }
 
 - (void)fetchMovies {
-    
-    NSURL *url = [NSURL URLWithString:@"https://api.themoviedb.org/3/movie/now_playing?api_key=743085b6c9c254c93493d8a0fe8fd045"];
-    NSURLRequest *request = [NSURLRequest requestWithURL:url cachePolicy:NSURLRequestReloadIgnoringLocalCacheData timeoutInterval:10.0];
-    NSURLSession *session = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration] delegate:nil delegateQueue:[NSOperationQueue mainQueue]];
+    NSURL *const url = [NSURL URLWithString:@"https://api.themoviedb.org/3/movie/now_playing?api_key=743085b6c9c254c93493d8a0fe8fd045"];
+    NSURLRequest *const request = [NSURLRequest requestWithURL:url cachePolicy:NSURLRequestReloadIgnoringLocalCacheData timeoutInterval:10.0];
+    NSURLSession *const session = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration] delegate:nil delegateQueue:[NSOperationQueue mainQueue]];
     NSURLSessionDataTask *task = [session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
         if (error != nil) {
             UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Cannot get movies" message:@"The Internet connection appears to be offline." preferredStyle:(UIAlertControllerStyleAlert)];
@@ -58,40 +54,27 @@
             UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"Try Again" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
                 [self fetchMovies];
             }];
+            // create a CANCEL action
+            UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:nil];
             // add the OK action to the alert controller
             [alert addAction:okAction];
+            // add the CANCEL action to the alert controller
+            [alert addAction:cancelAction];
             [self presentViewController:alert animated:YES completion:^{
             }];
             NSLog(@"%@", [error localizedDescription]);
         }
         else {
             NSDictionary *dataDictionary = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:nil];
-            
-            NSLog(@"%@", dataDictionary);
-            
             self.movies = dataDictionary[@"results"];
-            
-            for(NSDictionary * movie in self.movies)
-            {
-                NSLog(@"%@", movie[@"title"]);
-            }
-            
-            self.data = self.movies;
-            
-            self.filteredData = self.data;
+            self.filteredData = self.movies;
             [self.tableView reloadData];
             [self.activityIndicator stopAnimating];
-
-
         }
  
         [self.refreshControl endRefreshing];
     }];
     [task resume];
-    
-
-    // Do any additional setup after loading the view.
-    
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
@@ -115,7 +98,6 @@
     [cell.posterView setImageWithURL:posterURL];
     
     return cell;
-    
 }
 
 
@@ -131,13 +113,10 @@
         NSPredicate *predicate = [NSPredicate predicateWithBlock:^BOOL(NSDictionary *evaluatedObject, NSDictionary *bindings) {
             return [evaluatedObject[@"title"] containsString:searchText];
         }];
-        self.filteredData = [self.data filteredArrayUsingPredicate:predicate];
-        
-        NSLog(@"%@", self.filteredData);
-        
+        self.filteredData = [self.movies filteredArrayUsingPredicate:predicate];
     }
     else {
-        self.filteredData = self.data;
+        self.filteredData = self.movies;
     }
     
     [self.tableView reloadData];

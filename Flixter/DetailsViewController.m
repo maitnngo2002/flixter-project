@@ -28,16 +28,16 @@
     [self.titleLabel sizeToFit];
     [self.synopsisLabel sizeToFit];
     
-    NSString *baseURLString = @"https://image.tmdb.org/t/p/w500";
-    NSString *posterURLString = self.movie[@"poster_path"];
-    NSString *fullPosterURLString = [baseURLString stringByAppendingString:posterURLString];
-    NSURL *posterURL = [NSURL URLWithString:fullPosterURLString];
+    NSString *const baseURLString = @"https://image.tmdb.org/t/p/w500";
+    NSString *const posterURLString = self.movie[@"poster_path"];
+    NSString *const fullPosterURLString = [baseURLString stringByAppendingString:posterURLString];
+    NSURL *const posterURL = [NSURL URLWithString:fullPosterURLString];
     
     [self.posterView setImageWithURL:posterURL];
     
-    NSString *backdropURLString = self.movie[@"backdrop_path"];
-    NSString *fullBackdropURLString = [baseURLString stringByAppendingString:backdropURLString];
-    NSURL *backdropURL = [NSURL URLWithString:fullBackdropURLString];
+    NSString *const backdropURLString = self.movie[@"backdrop_path"];
+    NSString *const fullBackdropURLString = [baseURLString stringByAppendingString:backdropURLString];
+    NSURL *const backdropURL = [NSURL URLWithString:fullBackdropURLString];
     
     [self.backdropView setImageWithURL:backdropURL];
     
@@ -49,15 +49,6 @@
     TrailerViewController *trailerViewController = [segue destinationViewController];
     trailerViewController.movie = self.movie;
 
-}
-
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
-
-- (IBAction)didTap:(UITapGestureRecognizer *)sender {
-    NSLog(@"didtap");
 }
 
 #pragma mark - Navigation
